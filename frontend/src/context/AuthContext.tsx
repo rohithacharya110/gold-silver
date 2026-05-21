@@ -1,0 +1,71 @@
+"use client";
+
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { apiFetch } from "@/lib/api";
+
+type AuthContextValue = {
+  token: string | null;
+  username: string | null;
+  ready: boolean;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => void;
+};
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+const TOKEN_KEY = "gsw_token";
+const USER_KEY = "gsw_username";
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [token, setToken] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    setToken(localStorage.getItem(TOKEN_KEY));
+    setUsername(localStorage.getItem(USER_KEY));
+    setReady(true);
+  }, []);
+
+  const login = useCallback(async (u: string, password: string) => {
+    const res = await apiFetch<{ token: string; admin: { username: string } }>(
+      "/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: u, password }),
+      }
+    );
+    localStorage.setItem(TOKEN_KEY, res.token);
+    localStorage.setItem(USER_KEY, res.admin.username);
+    setToken(res.token);
+    setUsername(res.admin.username);
+  }, []);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    setToken(null);
+    setUsername(null);
+  }, []);
+
+  const value = useMemo(
+    () => ({ token, username, ready, login, logout }),
+    [token, username, ready, login, logout]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
+}

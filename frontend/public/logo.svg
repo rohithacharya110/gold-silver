@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="SJ monogram — Shri Jagnmathe">
+  <defs>
+    <linearGradient id="goldFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0d78c"/>
+      <stop offset="45%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#8a6a1e"/>
+    </linearGradient>
+    <linearGradient id="maroonSide" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4a0a12"/>
+      <stop offset="100%" stop-color="#800000"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" fill="#f4efe6"/>
+  <path
+    fill="url(#maroonSide)"
+    opacity="0.12"
+    d="M40 32h160c8 0 16 4 20 10l-20 4-160-2c-4-2-4-8 0-12z"
+  />
+  <path
+    fill="none"
+    stroke="url(#goldFace)"
+    stroke-width="3"
+    d="M48 100 Q120 20 192 100"
+  />
+  <path
+    fill="none"
+    stroke="#800000"
+    stroke-width="1.2"
+    d="M52 100 Q120 32 188 100"
+  />
+  <text
+    x="120"
+    y="105"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="56"
+    font-weight="700"
+    fill="url(#goldFace)"
+    stroke="#5c0a18"
+    stroke-width="0.4"
+  >
+    SJ
+  </text>
+  <g fill="url(#goldFace)" stroke="#6e1426" stroke-width="0.35" opacity="0.9">
+    <path
+      d="M20 180 Q60 140 120 170 Q180 140 220 180 Q200 200 120 196 Q40 200 20 180"
+    />
+    <path
+      fill="none"
+      d="M32 186 Q80 160 120 180 Q160 160 208 186 M48 192 Q120 175 192 192"
+    />
+  </g>
+  <g fill="none" stroke="url(#goldFace)" stroke-width="0.8" opacity="0.6">
+    <path d="M10 200 Q40 188 60 200 T100 200 T140 200 T180 200 T210 200 T230 200" />
+  </g>
+  <g fill="url(#goldFace)" opacity="0.4">
+    <circle cx="36" cy="48" r="2"/>
+    <circle cx="120" cy="28" r="2.2"/>
+    <circle cx="204" cy="48" r="2"/>
+  </g>
+</svg>
