@@ -12,7 +12,7 @@ const contactInfo = {
     "Udupi, Karnataka",
     "576102",
   ],
-  email: "shop@swarna.com",
+  email: "rohithacharya110@gmail.com",
   phone: "+91 7996587096",
 };
 
