@@ -2,8 +2,10 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import multer from "multer";
+import bcrypt from "bcryptjs";
 import { connectDb } from "./config/db.js";
 import { configureCloudinary } from "./config/cloudinary.js";
+import { Admin } from "./models/Admin.js";
 import authRoutes from "./routes/auth.js";
 import artworkRoutes from "./routes/artworks.js";
 import contactRoutes from "./routes/contact.js";
@@ -81,6 +83,25 @@ app.use(
   }
 );
 
+async function ensureAdminSeed() {
+  const username = process.env.SEED_ADMIN_USERNAME;
+  const password = process.env.SEED_ADMIN_PASSWORD;
+  if (!username || !password) return;
+
+  try {
+    const existing = await Admin.findOne({ username });
+    if (existing) {
+      console.log("Admin already exists:", username);
+      return;
+    }
+    const passwordHash = await bcrypt.hash(password, 12);
+    await Admin.create({ username, passwordHash });
+    console.log("Seeded admin:", username);
+  } catch (e) {
+    console.error("Admin seed failed:", e);
+  }
+}
+
 async function start() {
   const uri = process.env.MONGODB_URI;
   if (!uri) {
@@ -90,6 +111,7 @@ async function start() {
 
   configureCloudinary();
   await connectDb(uri);
+  await ensureAdminSeed();
 
   app.listen(port, () => {
     console.log(`API listening on http://localhost:${port}`);
