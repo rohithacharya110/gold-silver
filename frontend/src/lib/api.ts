@@ -1,13 +1,15 @@
 export function apiBase() {
-  // On mobile devices opening the site via LAN IP, "localhost" points to the phone.
-  // Prefer the current hostname so API calls go back to the same machine.
+  // In production (and any deploy), the configured API URL always wins.
+  const configured = process.env.NEXT_PUBLIC_API_URL;
+  if (configured) return configured;
+
+  // Dev fallback: when no API URL is configured, talk to the same host on
+  // port 4000 so a phone opening the site over the LAN reaches this machine.
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
-    const configured = process.env.NEXT_PUBLIC_API_URL;
-    const isLanHost = host !== "localhost" && host !== "127.0.0.1";
-    return isLanHost ? `http://${host}:4000` : configured ?? `http://${host}:4000`;
+    return `http://${host}:4000`;
   }
-  return process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+  return "http://localhost:4000";
 }
 
 export async function apiFetch<T>(
