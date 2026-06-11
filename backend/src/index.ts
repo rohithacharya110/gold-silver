@@ -84,17 +84,21 @@ app.use(
 );
 
 async function ensureAdminSeed() {
-  const username = process.env.SEED_ADMIN_USERNAME;
+  const username = process.env.SEED_ADMIN_USERNAME?.trim();
   const password = process.env.SEED_ADMIN_PASSWORD;
   if (!username || !password) return;
 
   try {
+    const passwordHash = await bcrypt.hash(password, 12);
     const existing = await Admin.findOne({ username });
     if (existing) {
-      console.log("Admin already exists:", username);
+      // Keep the stored password in sync with the configured env value so the
+      // credentials in the host environment always work.
+      existing.set({ passwordHash });
+      await existing.save();
+      console.log("Admin password synced for:", username);
       return;
     }
-    const passwordHash = await bcrypt.hash(password, 12);
     await Admin.create({ username, passwordHash });
     console.log("Seeded admin:", username);
   } catch (e) {
