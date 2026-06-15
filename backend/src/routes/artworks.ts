@@ -11,6 +11,20 @@ function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function errorDetail(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  if (e && typeof e === "object") {
+    const obj = e as Record<string, unknown>;
+    if (typeof obj.message === "string") return obj.message;
+    try {
+      return JSON.stringify(obj);
+    } catch {
+      return "Unknown error";
+    }
+  }
+  return String(e);
+}
+
 router.get("/", async (req, res) => {
   try {
     const material = String(req.query.material ?? "").toLowerCase();
@@ -104,8 +118,7 @@ router.post("/", requireAdmin, uploadMemory.single("image"), async (req, res) =>
     return res.status(201).json(doc);
   } catch (e) {
     console.error("Create artwork failed:", e);
-    const detail = e instanceof Error ? e.message : String(e);
-    return res.status(500).json({ error: `Failed to create artwork: ${detail}` });
+    return res.status(500).json({ error: `Failed to create artwork: ${errorDetail(e)}` });
   }
 });
 
