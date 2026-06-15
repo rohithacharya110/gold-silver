@@ -103,8 +103,9 @@ router.post("/", requireAdmin, uploadMemory.single("image"), async (req, res) =>
 
     return res.status(201).json(doc);
   } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: "Failed to create artwork" });
+    console.error("Create artwork failed:", e);
+    const detail = e instanceof Error ? e.message : String(e);
+    return res.status(500).json({ error: `Failed to create artwork: ${detail}` });
   }
 });
 
