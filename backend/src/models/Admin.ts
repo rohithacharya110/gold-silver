@@ -4,6 +4,8 @@ const adminSchema = new Schema(
   {
     username: { type: String, required: true, unique: true, trim: true },
     passwordHash: { type: String, required: true },
+    // Updated on login + periodic heartbeat; used to detect an active admin.
+    lastSeenAt: { type: Date, default: null },
   },
   { timestamps: true }
 );

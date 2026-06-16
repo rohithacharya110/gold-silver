@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { useAuth } from "@/context/AuthContext";
+import { apiFetch } from "@/lib/api";
 
 const links = [
   { href: "/#collection", label: "Collection" },
@@ -33,8 +34,30 @@ export function SiteHeader() {
   const searchParams = useSearchParams();
   const { token, ready } = useAuth();
   const [open, setOpen] = useState(false);
+  const [adminActive, setAdminActive] = useState(false);
 
-  const showAdmin = ready && !token;
+  // Poll whether any admin is currently logged in elsewhere, so the public
+  // Admin button hides while an admin session is active.
+  useEffect(() => {
+    let cancelled = false;
+    const check = () => {
+      apiFetch<{ active: boolean }>("/admin-active")
+        .then((r) => {
+          if (!cancelled) setAdminActive(Boolean(r.active));
+        })
+        .catch(() => {});
+    };
+    check();
+    const id = setInterval(check, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [pathname]);
+
+  // Show the Admin button only when the page is ready, this device isn't
+  // logged in, and no admin session is active anywhere.
+  const showAdmin = ready && !token && !adminActive;
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-ab-goldBorder/70 bg-ab-deep/88 backdrop-blur-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.06]">

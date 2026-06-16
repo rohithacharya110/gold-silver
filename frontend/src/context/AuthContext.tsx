@@ -34,6 +34,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setReady(true);
   }, []);
 
+  // While logged in (any page/tab), keep the server-side presence alive so
+  // other visitors' headers can hide the Admin button.
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    const beat = () => {
+      apiFetch("/heartbeat", { method: "POST", token }).catch(() => {});
+    };
+    beat();
+    const id = setInterval(() => {
+      if (!cancelled) beat();
+    }, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [token]);
+
   const login = useCallback(async (u: string, password: string) => {
     const res = await apiFetch<{ token: string; admin: { username: string } }>(
       "/login",
@@ -50,6 +68,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
+    const current = localStorage.getItem(TOKEN_KEY);
+    if (current) {
+      apiFetch("/logout", { method: "POST", token: current }).catch(() => {});
+    }
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setToken(null);
