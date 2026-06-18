@@ -60,6 +60,11 @@ export function HomeCategories({ artworks }: { artworks: Artwork[] }) {
                 className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ab-charcoal/70 via-transparent to-transparent opacity-90"
                 aria-hidden
               />
+              {/* Right-to-left gold sheen sweep on hover */}
+              <div
+                className="pointer-events-none absolute inset-0 translate-x-full bg-gradient-to-l from-transparent via-ab-gold/30 to-transparent transition-transform duration-700 ease-out group-hover:-translate-x-full"
+                aria-hidden
+              />
               <span
                 className={`pointer-events-none absolute bottom-3 left-3 rounded px-2 py-0.5 font-sans text-[0.55rem] uppercase tracking-[0.2em] ${
                   a.material === "gold"
