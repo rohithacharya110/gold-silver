@@ -38,10 +38,6 @@ export function SiteFooter() {
             <Link href="/contact" className="transition hover:text-ab-gold">
               Contact
             </Link>
-            <span className="text-ab-goldBorder">·</span>
-            <Link href="/admin/login" className="transition hover:text-ab-gold">
-              Admin
-            </Link>
           </div>
           <p className="text-[11px] font-light text-ab-dim">
             © {new Date().getFullYear()} Shri Jaganmathe. All rights reserved.
