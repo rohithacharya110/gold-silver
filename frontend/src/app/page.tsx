@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { HomeHeroSplit } from "@/components/home/HomeHeroSplit";
 import { HomeMarquee } from "@/components/home/HomeMarquee";
 import { HomeCategories } from "@/components/home/HomeCategories";
@@ -6,6 +7,18 @@ import { HomeTestimonial } from "@/components/home/HomeTestimonial";
 import { HomeContactStrip } from "@/components/home/HomeContactStrip";
 import { apiBase } from "@/lib/api";
 import type { Artwork, PaginatedArtworks } from "@/lib/types";
+import { defaultDescription, siteName } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Jaganmathe Gold and Silver Artwork",
+  description: defaultDescription,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: `${siteName} — Jaganmathe Gold and Silver Artwork`,
+    description: defaultDescription,
+    url: "/",
+  },
+};
 
 /** Pull every artwork (gold & silver); API caps at 48 per page — walk pages until done. */
 async function fetchAllArtworks(): Promise<Artwork[]> {

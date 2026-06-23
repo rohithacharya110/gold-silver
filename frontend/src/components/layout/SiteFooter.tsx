@@ -22,8 +22,8 @@ export function SiteFooter() {
               Gold & Silver Artwork
             </p>
             <p className="mt-4 text-sm font-light leading-relaxed text-ab-muted">
-              Bespoke gold and silver artistry for collectors worldwide — precision craft,
-              luminous finish, inspired by traditional workshop ornament.
+              Jaganmathe gold and silver artwork for collectors worldwide — precision craft, luminous finish, and
+              traditional workshop ornament from Udupi, Karnataka.
             </p>
           </div>
         </div>

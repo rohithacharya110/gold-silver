@@ -6,6 +6,8 @@ import { Providers } from "./providers";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CreeperUnderlay } from "@/components/brand/CreeperFlourish";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { defaultDescription, seoKeywords, siteName, siteTagline, siteUrl } from "@/lib/site";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -33,9 +35,41 @@ const mono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SHRI JAGANMATHE — Gold & Silver Artwork",
-  description:
-    "SHRI JAGANMATHE — Gold & Silver Artwork Workshop. Explore the gallery, commissions, and workshop collaborations.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${siteName} — ${siteTagline} | Jaganmathe Gold & Silver Artwork`,
+    template: `%s | ${siteName}`,
+  },
+  description: defaultDescription,
+  keywords: [...seoKeywords],
+  applicationName: siteName,
+  authors: [{ name: siteName }],
+  creator: siteName,
+  publisher: siteName,
+  category: "Gold & Silver Artwork",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: siteUrl,
+    siteName,
+    title: `${siteName} — Jaganmathe Gold and Silver Artwork`,
+    description: defaultDescription,
+    images: [{ url: "/logo.svg", width: 512, height: 512, alt: siteName }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteName} — Jaganmathe Gold and Silver Artwork`,
+    description: defaultDescription,
+    images: ["/logo.svg"],
+  },
 };
 
 export default function RootLayout({
@@ -48,6 +82,7 @@ export default function RootLayout({
       <body
         className={`${display.variable} ${brand.variable} ${body.variable} ${mono.variable} min-h-screen ab-wallpaper font-sans text-ab-ink antialiased`}
       >
+        <JsonLd />
         <Providers>
           <div className="relative isolate min-h-screen">
             <CreeperUnderlay />

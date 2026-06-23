@@ -19,8 +19,8 @@ export function HomeHeroSplit() {
         </h1>
 
         <p className="mt-8 max-w-[400px] font-sans text-[0.9rem] font-light leading-[1.9] text-ab-muted">
-          A curated workshop of handcrafted gold and silver — each piece a testament to the goldsmith&apos;s craft,
-          refined for discerning collectors.
+          Shri Jaganmathe — gold and silver artwork crafted in Udupi. Each piece is a testament to the goldsmith&apos;s
+          craft, refined for discerning collectors.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center gap-5 sm:mt-14 sm:gap-6">
