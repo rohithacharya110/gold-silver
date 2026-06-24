@@ -19,7 +19,14 @@ export async function apiFetch<T>(
   const { token, headers, ...rest } = init ?? {};
   const h = new Headers(headers);
   if (token) h.set("Authorization", `Bearer ${token}`);
-  const res = await fetch(`${apiBase()}${path}`, { ...rest, headers: h });
+  let res: Response;
+  try {
+    res = await fetch(`${apiBase()}${path}`, { ...rest, headers: h });
+  } catch {
+    throw new Error(
+      `Cannot reach API at ${apiBase()}. Check that the backend is running and NEXT_PUBLIC_API_URL is set correctly.`
+    );
+  }
   const text = await res.text();
   let data: unknown = null;
   if (text) {

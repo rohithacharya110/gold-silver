@@ -25,7 +25,7 @@ export default function AdminLoginPage() {
     setError(null);
     try {
       await login(username, password);
-      router.replace("/admin/dashboard");
+      window.location.assign("/admin/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

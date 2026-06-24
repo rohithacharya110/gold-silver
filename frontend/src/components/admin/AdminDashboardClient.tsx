@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { apiFetch } from "@/lib/api";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, getStoredToken } from "@/context/AuthContext";
 import type {
   Artwork,
   ContactMessage,
@@ -41,14 +41,15 @@ export function AdminDashboardClient() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
 
   const refresh = useCallback(async () => {
-    if (!token) return;
+    const authToken = token ?? getStoredToken();
+    if (!authToken) return;
     setError(null);
     setLoading(true);
     try {
       const [s, artworks, inbox] = await Promise.all([
-        apiFetch<Stats>("/artworks/stats", { token }),
-        apiFetch<PaginatedArtworks>("/artworks?limit=100&page=1", { token }),
-        apiFetch<{ data: ContactMessage[] }>("/contact/messages", { token }),
+        apiFetch<Stats>("/artworks/stats", { token: authToken }),
+        apiFetch<PaginatedArtworks>("/artworks?limit=100&page=1", { token: authToken }),
+        apiFetch<{ data: ContactMessage[] }>("/contact/messages", { token: authToken }),
       ]);
       setStats(s);
       setList(artworks.data);
@@ -62,7 +63,8 @@ export function AdminDashboardClient() {
 
   useEffect(() => {
     if (!ready) return;
-    if (!token) {
+    const authToken = token ?? getStoredToken();
+    if (!authToken) {
       router.replace("/admin/login");
       return;
     }

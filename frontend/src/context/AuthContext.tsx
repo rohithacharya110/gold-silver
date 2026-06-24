@@ -23,14 +23,24 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const TOKEN_KEY = "gsw_token";
 const USER_KEY = "gsw_username";
 
+function readStoredToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+function readStoredUsername() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(USER_KEY);
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setToken(localStorage.getItem(TOKEN_KEY));
-    setUsername(localStorage.getItem(USER_KEY));
+    setToken(readStoredToken());
+    setUsername(readStoredUsername());
     setReady(true);
   }, []);
 
@@ -84,6 +94,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function getStoredToken() {
+  return readStoredToken();
 }
 
 export function useAuth() {
