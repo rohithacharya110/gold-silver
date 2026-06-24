@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BrandLogo } from "@/components/brand/BrandLogo";
-import { useAuth } from "@/context/AuthContext";
-import { apiFetch } from "@/lib/api";
 
 const links = [
   { href: "/#collection", label: "Collection" },
@@ -32,32 +30,7 @@ function navLinkActive(href: string, pathname: string, sp: URLSearchParams): boo
 export function SiteHeader() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { token, ready } = useAuth();
   const [open, setOpen] = useState(false);
-  const [adminActive, setAdminActive] = useState(false);
-
-  // Poll whether any admin is currently logged in elsewhere, so the public
-  // Admin button hides while an admin session is active.
-  useEffect(() => {
-    let cancelled = false;
-    const check = () => {
-      apiFetch<{ active: boolean }>("/admin-active")
-        .then((r) => {
-          if (!cancelled) setAdminActive(Boolean(r.active));
-        })
-        .catch(() => {});
-    };
-    check();
-    const id = setInterval(check, 30000);
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-    };
-  }, [pathname]);
-
-  // Show the Admin button only when the page is ready, this device isn't
-  // logged in, and no admin session is active anywhere.
-  const showAdmin = ready && !token && !adminActive;
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-ab-goldBorder/70 bg-ab-deep/88 backdrop-blur-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.06]">
@@ -108,16 +81,6 @@ export function SiteHeader() {
               </Link>
             );
           })}
-
-          {/* Admin CTA — hidden once an admin is logged in */}
-          {showAdmin && (
-            <Link
-              href="/admin/login"
-              className="ml-2 rounded-full border border-ab-goldBorder bg-ab-goldDim px-5 py-2 text-xs font-medium uppercase tracking-[0.16em] text-ab-gold shadow-sm transition hover:bg-ab-gold hover:text-ab-void"
-            >
-              Admin
-            </Link>
-          )}
         </nav>
 
         {/* Mobile hamburger */}
@@ -156,15 +119,6 @@ export function SiteHeader() {
                   {l.label}
                 </Link>
               ))}
-              {showAdmin && (
-                <Link
-                  href="/admin/login"
-                  onClick={() => setOpen(false)}
-                  className="rounded-xl border border-ab-goldBorder bg-ab-goldDim px-4 py-3 text-center text-xs font-medium uppercase tracking-widest text-ab-gold"
-                >
-                  Admin
-                </Link>
-              )}
             </div>
           </motion.div>
         )}
